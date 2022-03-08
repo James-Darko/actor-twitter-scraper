@@ -36,6 +36,7 @@ Apify.main(async () => {
         mode = 'replies',
         addUserInfo = true,
         maxRequestRetries = 3,
+        pageLoadTimeout = 30000,
         maxIdleTimeoutSecs = 30,
         debugLog = false,
     } = input;
@@ -236,7 +237,7 @@ Apify.main(async () => {
         }],
         preNavigationHooks: [async ({ page }, gotoOptions) => {
             gotoOptions.waitUntil = 'domcontentloaded';
-            gotoOptions.timeout = 30000;
+            gotoOptions.timeout = pageLoadTimeout;
 
             await page.setBypassCSP(true);
 
@@ -411,11 +412,11 @@ Apify.main(async () => {
                         && Object.values(window.__SCRIPTS_LOADED__).length
                         && Object.values(window.__SCRIPTS_LOADED__).every((e) => e === true);
                 }, {
-                    timeout: 30000,
+                    timeout: pageLoadTimeout,
                 });
 
                 await page.waitForSelector('header', {
-                    timeout: 30000,
+                    timeout: pageLoadTimeout,
                 });
             } catch (e) {
                 log.debug(e.message, { url: request.url });
